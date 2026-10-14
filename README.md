@@ -1,0 +1,3 @@
+# CampusFix 🏫
+
+CampusFix is a web-based campus complaint management system designed to help students report campus-related issues quickly and easily. Students can submit complaints with details such as the title, description, category, location, and priority, while tracking the status of their complaints. Administrators can view complaints, manage priorities, and update their status to ensure issues are addressed efficiently. Built using HTML, CSS, JavaScript, and Supabase, CampusFix aims to improve communication between students and campus administration and make campus maintenance more organized and transparent.
