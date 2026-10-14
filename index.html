@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusFix | Smart Campus</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <a href="index.html" class="brand">
+            <span class="brand-icon">✦</span>
+            Campus<span>Fix</span>
+        </a>
+
+        <p class="menu-label">WORKSPACE</p>
+
+        <nav>
+            <a href="index.html" class="nav-link active">
+                ⌂ <span>Dashboard</span>
+            </a>
+
+            <a href="complaint.html" class="nav-link">
+                ＋ <span>Report Issue</span>
+            </a>
+
+            <a href="#complaints" class="nav-link">
+                ▤ <span>My Complaints</span>
+            </a>
+
+            <a href="#analytics" class="nav-link">
+                ▥ <span>Analytics</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="campus-card">
+                <div class="campus-emoji">🏫</div>
+                <h3>Better campus,<br>better tomorrow.</h3>
+                <p>Every report makes a difference.</p>
+            </div>
+
+            <button class="theme-button" id="themeToggle" type="button">
+                <span id="themeIcon">🌙</span>
+                <span id="themeText">Dark mode</span>
+                <span class="switch"><span></span></span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <!-- HEADER -->
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">SMART CAMPUS • DIGITAL INNOVATION</p>
+                <h2>Your campus, improved.</h2>
+            </div>
+
+            <div class="user-profile">
+                <div class="avatar">S</div>
+                <div>
+                    <strong id="studentName">Student</strong>
+                    <p id="studentEmail">Welcome back!</p>
+                    <button
+                        type="button"
+                        id="logoutButton"
+                        class="logout-button">
+                        Log out
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- HERO -->
+        <section class="hero">
+            <div class="hero-content">
+                <span class="hero-tag">✦ YOUR VOICE MATTERS</span>
+
+                <h1>
+                    Let's make your<br>
+                    campus <span>better.</span>
+                </h1>
+
+                <p>
+                    Report problems, track progress, and help create
+                    a safer, cleaner campus for everyone.
+                </p>
+
+                <a class="primary-button" href="complaint.html">
+                    Report an issue <span>→</span>
+                </a>
+            </div>
+
+            <div class="hero-art">🏫</div>
+            <div class="hero-decoration decoration-one"></div>
+            <div class="hero-decoration decoration-two"></div>
+        </section>
+
+        <!-- STATISTICS -->
+        <section class="stats-grid" id="analytics">
+
+            <article class="stat-card blue">
+                <div class="stat-top">
+                    <span>Total complaints</span>
+                    <span class="stat-icon">▤</span>
+                </div>
+                <h2 id="totalCount">00</h2>
+                <p>All reported issues</p>
+            </article>
+
+            <article class="stat-card orange">
+                <div class="stat-top">
+                    <span>Pending</span>
+                    <span class="stat-icon">◷</span>
+                </div>
+                <h2 id="pendingCount">00</h2>
+                <p>Awaiting action</p>
+            </article>
+
+            <article class="stat-card purple">
+                <div class="stat-top">
+                    <span>In progress</span>
+                    <span class="stat-icon">⟳</span>
+                </div>
+                <h2 id="progressCount">00</h2>
+                <p>Being worked on</p>
+            </article>
+
+            <article class="stat-card green">
+                <div class="stat-top">
+                    <span>Resolved</span>
+                    <span class="stat-icon">✓</span>
+                </div>
+                <h2 id="resolvedCount">00</h2>
+                <p>Successfully completed</p>
+            </article>
+
+        </section>
+
+        <!-- COMPLAINTS AND QUICK ACTIONS -->
+        <section class="content-grid">
+
+            <!-- RECENT COMPLAINTS -->
+            <div class="panel" id="complaints">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Recent complaints</h2>
+                        <p>Keep track of your campus reports.</p>
+                    </div>
+
+                    <span class="live-dot">● Live</span>
+                </div>
+
+                <div class="complaint-list" id="complaintList">
+                    <p>Loading your complaints...</p>
+                </div>
+            </div>
+
+            <!-- QUICK ACTIONS -->
+            <div class="panel quick-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Quick actions</h2>
+                        <p>What would you like to do?</p>
+                    </div>
+                </div>
+
+                <a href="complaint.html" class="action-card">
+                    <span class="action-icon blue-icon">＋</span>
+
+                    <span>
+                        <strong>Report a problem</strong>
+                        <small>Submit a new complaint</small>
+                    </span>
+
+                    <span class="action-arrow">→</span>
+                </a>
+
+                <a href="#complaints" class="action-card">
+                    <span class="action-icon purple-icon">▤</span>
+
+                    <span>
+                        <strong>Track complaints</strong>
+                        <small>Check your current reports</small>
+                    </span>
+
+                    <span class="action-arrow">→</span>
+                </a>
+
+                <a href="complaint.html" class="action-card">
+                    <span class="action-icon green-icon">✦</span>
+
+                    <span>
+                        <strong>Improve your campus</strong>
+                        <small>Tell us what needs fixing</small>
+                    </span>
+
+                    <span class="action-arrow">→</span>
+                </a>
+            </div>
+
+        </section>
+
+        <!-- FOOTER -->
+        <footer>
+            <span>✦ CampusFix</span>
+            <span>Small reports. Better campuses.</span>
+        </footer>
+
+    </main>
+</div>
+
+<!-- LIGHT / DARK MODE -->
+<script>
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+    const themeText = document.getElementById("themeText");
+
+    function applyTheme(theme) {
+        document.body.classList.toggle("dark", theme === "dark");
+
+        themeIcon.textContent = theme === "dark" ? "☀️" : "🌙";
+        themeText.textContent = theme === "dark" ? "Light mode" : "Dark mode";
+    }
+
+    let savedTheme = "light";
+
+    try {
+        savedTheme = localStorage.getItem("campusfix-theme") || "light";
+    } catch (error) {}
+
+    applyTheme(savedTheme);
+
+    themeToggle.addEventListener("click", function () {
+        const nextTheme = document.body.classList.contains("dark")
+            ? "light"
+            : "dark";
+
+        applyTheme(nextTheme);
+
+        try {
+            localStorage.setItem("campusfix-theme", nextTheme);
+        } catch (error) {}
+    });
+</script>
+
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+
+</body>
+</html>

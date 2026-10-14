@@ -1,0 +1,292 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusFix | Admin Dashboard</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #182338;
+    }
+
+    header {
+      background: white;
+      padding: 20px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e5eaf2;
+    }
+
+    header h2 { margin: 0; color: #315ee7; }
+
+    button, select {
+      padding: 10px 13px;
+      border: 1px solid #d8dfeb;
+      border-radius: 9px;
+      cursor: pointer;
+      background: white;
+    }
+
+    .logout { background: #182338; color: white; }
+
+    main { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+
+    .muted { color: #718096; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin: 25px 0;
+    }
+
+    .card, .panel {
+      background: white;
+      padding: 22px;
+      border-radius: 16px;
+      border: 1px solid #e6ebf3;
+    }
+
+    .card p { margin: 0; color: #718096; }
+    .card h2 { font-size: 32px; margin: 12px 0 0; }
+
+    .panel { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 750px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 15px 12px;
+      border-bottom: 1px solid #edf0f5;
+      vertical-align: top;
+    }
+
+    th { color: #718096; font-size: 13px; }
+    td { font-size: 14px; }
+
+    #message { margin: 15px 0; }
+
+    @media (max-width: 600px) {
+      header { padding: 16px; }
+      main { padding: 0 12px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h2>CampusFix <span style="color:#182338">Admin</span></h2>
+    <button class="logout" id="logoutButton">Log out</button>
+  </header>
+
+  <main>
+    <h1>Complaint Management</h1>
+    <p class="muted">Review and manage campus complaints.</p>
+
+    <div class="stats">
+      <div class="card">
+        <p>Total complaints</p>
+        <h2 id="totalCount">—</h2>
+      </div>
+      <div class="card">
+        <p>Pending</p>
+        <h2 id="pendingCount">—</h2>
+      </div>
+      <div class="card">
+        <p>In progress</p>
+        <h2 id="progressCount">—</h2>
+      </div>
+      <div class="card">
+        <p>Resolved</p>
+        <h2 id="resolvedCount">—</h2>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>All complaints</h2>
+      <p id="message" class="muted" aria-live="polite">
+        Checking admin access…
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Complaint</th>
+            <th>Category</th>
+            <th>Location</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Update</th>
+          </tr>
+        </thead>
+        <tbody id="complaintRows"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    // Use the client created in js/supabase.js
+    const client = window.campusSupabase;
+
+    const message = document.getElementById("message");
+    const rows = document.getElementById("complaintRows");
+
+    async function startAdmin() {
+      if (!client) {
+        message.textContent =
+          "Supabase client not found. Check js/supabase.js.";
+        return;
+      }
+
+      const { data, error: authError } =
+        await client.auth.getUser();
+
+      if (authError || !data.user) {
+        window.location.replace("login.html");
+        return;
+      }
+
+      const { data: profile, error: profileError } = await client
+        .from("profiles")
+        .select("role")
+        .eq("id", data.user.id)
+        .single();
+
+      if (profileError || profile?.role !== "admin") {
+        message.textContent =
+          "Access denied. Please use your authorized admin account.";
+        return;
+      }
+
+      await loadComplaints();
+    }
+
+    async function loadComplaints() {
+      message.textContent = "Loading complaints…";
+
+      const { data, error } = await client
+        .from("complaints")
+        .select("id, title, description, category, location, priority, status")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        message.textContent =
+          "Could not load complaints: " + error.message;
+        return;
+      }
+
+      const complaints = data || [];
+
+      document.getElementById("totalCount").textContent =
+        complaints.length;
+      document.getElementById("pendingCount").textContent =
+        complaints.filter(c => c.status === "Pending").length;
+      document.getElementById("progressCount").textContent =
+        complaints.filter(c => c.status === "In Progress").length;
+      document.getElementById("resolvedCount").textContent =
+        complaints.filter(c => c.status === "Resolved").length;
+
+      rows.replaceChildren();
+
+      if (complaints.length === 0) {
+        message.textContent = "No complaints found.";
+        return;
+      }
+
+      message.textContent =
+        complaints.length + " complaint(s) found.";
+
+      for (const complaint of complaints) {
+        const tr = document.createElement("tr");
+
+        function makeCell(value) {
+          const td = document.createElement("td");
+          td.textContent = value || "—";
+          return td;
+        }
+
+        tr.append(
+          makeCell(complaint.title),
+          makeCell(complaint.category),
+          makeCell(complaint.location),
+          makeCell(complaint.priority),
+          makeCell(complaint.status)
+        );
+
+        const updateCell = document.createElement("td");
+        const select = document.createElement("select");
+
+        ["Pending", "In Progress", "Resolved"].forEach(status => {
+          const option = document.createElement("option");
+          option.value = status;
+          option.textContent = status;
+          select.appendChild(option);
+        });
+
+        select.value = complaint.status;
+
+        const saveButton = document.createElement("button");
+        saveButton.textContent = "Save";
+        saveButton.style.marginTop = "8px";
+
+        saveButton.addEventListener("click", async () => {
+          saveButton.disabled = true;
+          message.textContent = "Updating complaint…";
+
+          const { error } = await client
+            .from("complaints")
+            .update({ status: select.value })
+            .eq("id", complaint.id);
+
+          saveButton.disabled = false;
+
+          if (error) {
+            message.textContent =
+              "Update failed: " + error.message;
+            return;
+          }
+
+          message.textContent = "Status updated successfully.";
+          await loadComplaints();
+        });
+
+        updateCell.append(
+          select,
+          document.createElement("br"),
+          saveButton
+        );
+
+        tr.appendChild(updateCell);
+        rows.appendChild(tr);
+      }
+    }
+
+    document.getElementById("logoutButton").addEventListener(
+      "click",
+      async () => {
+        if (client) {
+          await client.auth.signOut();
+        }
+        window.location.replace("login.html");
+      }
+    );
+
+    startAdmin();
+  </script>
+</body>
+</html>
